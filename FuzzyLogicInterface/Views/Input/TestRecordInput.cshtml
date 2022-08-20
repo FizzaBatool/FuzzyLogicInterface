@@ -1,0 +1,54 @@
+﻿@model FuzzyLogicInterface.Models.TestRecord
+
+@{
+    ViewData["Title"] = "TestRecordInput";
+    
+}
+
+   <h1>Regression Test Case Prioritizor</h1>
+    <h3 class="text-danger">Enter your test case details</h3>
+
+<hr />
+<div>
+    <h5 class="text-primary">@ViewData["Message"]</h5>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="TestRecordInput">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+  
+             <div class="form-group">
+               <h2>Module code lines are @TempData["ModuleCodeLines"]</h2>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CriticalityOfRequirement" class="control-label">Criticality of Requirement</label>
+                <input asp-for="CriticalityOfRequirement" class="form-control" />
+                <span asp-validation-for="CriticalityOfRequirement" class="text-danger"></span>
+            </div>
+             <label class="text-dark">Code lines of test case must be less than module code lines</label>
+            <div class="form-group">
+                <label asp-for="CodeCoverage" class="control-label">Code Lines of Test Case</label>
+                <input asp-for="CodeCoverage" class="form-control" />
+                <span asp-validation-for="CodeCoverage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FaultCoverage" class="control-label">Fault Coverage</label>
+                <input asp-for="FaultCoverage" class="form-control" />
+                <span asp-validation-for="FaultCoverage" class="text-danger"></span>
+            </div>
+            <br />
+         <div>
+                <input type="submit" value="Add Record" class="btn btn-primary" />     
+                  @Html.ActionLink("Sort All Records", "SortOutput", "Input",  htmlAttributes: new {@class="btn btn-warning btn-md", style="white-space: normal" })
+            </div>
+         
+        </form>
+           
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

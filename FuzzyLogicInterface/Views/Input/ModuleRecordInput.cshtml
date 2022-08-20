@@ -1,0 +1,37 @@
+﻿@model FuzzyLogicInterface.Models.ModuleRecord
+
+@{
+    ViewData["Title"] = "ModuleRecordInput";
+}
+
+   <h1 class="text-success">Regression Test Case Prioritizor</h1>
+   <h3 class="text-danger">Enter how many lines of code your module have:</h3>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ModuleRecordInput">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ModuleCodeLines" class="control-label">Module Code Lines</label>
+                <input asp-for="ModuleCodeLines" class="form-control" />
+                <span asp-validation-for="ModuleCodeLines" class="text-danger"></span>
+            </div>
+    
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Continue To Add Test Samples" class="btn btn-primary" />
+                  @Html.ActionLink("Sort All Records", "SortOutput", "Input",  htmlAttributes: new {@class="btn btn-warning btn-md", style="white-space: normal" })
+            </div>
+        </form>
+    </div>
+</div>
+
+@*<div>
+    <a asp-action="Index">Back to List</a>
+</div>*@
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

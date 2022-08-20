@@ -1,0 +1,103 @@
+﻿@*@model IEnumerable<FuzzyLogicInterface.Models.TestRecord>*@
+ @model List<FuzzyLogicInterface.Models.TestRecord>
+
+<div>
+       <h1>Regression Test Case Prioritizor</h1>
+    <h3 class="text-danger">Sorted test cases on priority</h3>
+
+    <hr />
+
+    <div>
+        @Html.ActionLink("Start Over", "ModuleRecordInput", "Input", htmlAttributes: new {@class="btn btn-primary btn-md", style="white-space: normal" })
+    </div>
+     
+<table class="table">
+
+    <thead>
+        <tr>
+           @* <th>
+                 @Html.DisplayNameFor(model => model.ModuleCodeLinesEntered)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CriticalityOfRequirement)
+            </th>
+            <th>
+                 @Html.DisplayNameFor(model => model.CodeCoverage)
+            </th>
+            <th>
+                 @Html.DisplayNameFor(model => model.FaultCoverage)
+            </th>
+            <th>
+                 @Html.DisplayNameFor(model => model.PriorityValue)
+            </th>
+           <th>
+                @Html.DisplayNameFor(model => model.Priority)
+           </th>*@
+
+           <th>Module Code Lines</th>
+           <th>Criticality Of Requirement</th>
+            <th>Code Coverage</th>
+           <th>Fault Coverage</th>
+            <th>Priority Value</th>
+           <th>Priority</th>
+
+
+
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+         
+       
+           
+        <tr>
+            <td>
+               @*@Html.DisplayFor(modelItem => item.Detail)*@
+               @item.ModuleCodeLinesEntered
+            </td>
+            <td>
+                  @item.CriticalityOfRequirement
+            </td>
+            <td>
+                  @item.CodeCoverage
+            </td>
+            <td>
+                  @item.FaultCoverage
+            </td>
+            <td>
+                  @item.PriorityValue
+            </td>
+            <td>
+                  @item.Priority
+            </td>
+           
+           
+              </tr>
+}
+    </tbody>
+</table>
+   @* <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CriticalityOfRequirement)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CriticalityOfRequirement)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CodeCoverage)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CodeCoverage)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FaultCoverage)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FaultCoverage)
+        </dd>
+    </dl>*@
+</div>
+@*<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>*@
