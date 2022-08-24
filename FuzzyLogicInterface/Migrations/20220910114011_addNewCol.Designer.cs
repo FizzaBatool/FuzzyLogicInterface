@@ -4,6 +4,7 @@ using FuzzyLogicInterface.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FuzzyLogicInterface.Migrations
 {
     [DbContext(typeof(FuzzyContext))]
-    partial class FuzzyContextModelSnapshot : ModelSnapshot
+    [Migration("20220910114011_addNewCol")]
+    partial class addNewCol
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,8 +69,8 @@ namespace FuzzyLogicInterface.Migrations
                     b.Property<float>("PriorityValue")
                         .HasColumnType("real");
 
-                    b.Property<float>("TestCodeLines")
-                        .HasColumnType("real");
+                    b.Property<int>("TestCodeLines")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("dbEntry")
                         .HasColumnType("datetime2");

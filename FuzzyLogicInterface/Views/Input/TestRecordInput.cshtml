@@ -6,42 +6,61 @@
 }
 
    <h1>Regression Test Case Prioritizor</h1>
-    <h3 class="text-danger">Enter your test case details</h3>
-
-<hr />
+    
+    <hr />
+    <h4 class="text-danger">Enter your test case details</h4>
 <div>
-    <h5 class="text-primary">@ViewData["Message"]</h5>
+   
+    <br />
+     <h6 class="text-info">Module code lines are @TempData["ModuleCodeLines"]</h6>
 </div>
+
 
 <div class="row">
     <div class="col-md-4">
+           <div class="form-group">
+               <h5 class="text-primary">@ViewData["Message"]</h5>
+              @* <h6 class="text-info">Module code lines are @TempData["ModuleCodeLines"]</h6>*@
+            </div>
+
         <form asp-action="TestRecordInput">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
   
-             <div class="form-group">
-               <h2>Module code lines are @TempData["ModuleCodeLines"]</h2>
+            <div class="form-group">
+                <label asp-for="TestCodeLines" class="control-label fw-bold">Code Lines of Test Case </label> 
+                 <div class="form-group">
+                     <h8 class="text-danger">@ViewData["Warning"]</h8>
+             
+                     </div>
+               @* <label class="text-danger"> *Code lines of test case must be less than module code lines*</label>*@
+                <input asp-for="TestCodeLines" class="form-control" />
+                <span asp-validation-for="TestCodeLines" class="text-danger"></span>
             </div>
+            <br />
 
             <div class="form-group">
-                <label asp-for="CriticalityOfRequirement" class="control-label">Criticality of Requirement</label>
+                <label asp-for="CriticalityOfRequirement" class="control-label fw-bold">Criticality of Requirement </label>
+                <label class="text-dark">The field value must be between 1 and 10</label>
                 <input asp-for="CriticalityOfRequirement" class="form-control" />
                 <span asp-validation-for="CriticalityOfRequirement" class="text-danger"></span>
             </div>
-             <label class="text-dark">Code lines of test case must be less than module code lines</label>
+            
+      <br />
             <div class="form-group">
-                <label asp-for="CodeCoverage" class="control-label">Code Lines of Test Case</label>
-                <input asp-for="CodeCoverage" class="form-control" />
-                <span asp-validation-for="CodeCoverage" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FaultCoverage" class="control-label">Fault Coverage</label>
+                <label asp-for="FaultCoverage" class="control-label fw-bold">Fault Coverage of test case </label>
+                 <label class="text-dark">The field value must be between 1 and 10</label>
                 <input asp-for="FaultCoverage" class="form-control" />
                 <span asp-validation-for="FaultCoverage" class="text-danger"></span>
             </div>
+
+            <br />
             <br />
          <div>
-                <input type="submit" value="Add Record" class="btn btn-primary" />     
-                  @Html.ActionLink("Sort All Records", "SortOutput", "Input",  htmlAttributes: new {@class="btn btn-warning btn-md", style="white-space: normal" })
+           <input type="submit" value="Add Record" class="btn btn-primary" />  
+            
+                  @Html.ActionLink("Sort All Records", "SortOutput", "Input", htmlAttributes: new {@class="btn btn-warning btn-md", style="white-space: normal" })
+
+                  @Html.ActionLink("Start Over", "ModuleRecordInput", "Input", htmlAttributes: new {@class="btn btn-info btn-md", style="white-space: normal" })
             </div>
          
         </form>

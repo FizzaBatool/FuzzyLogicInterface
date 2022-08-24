@@ -13,6 +13,8 @@ namespace FuzzyLogicInterface.Controllers
         public float midEnd = 0.66f;
         public float hiStart = 0.67f;
         public float hiEnd = 1.0f;
+        public int count = 0;
+     
         public InputController(FuzzyContext db)
         {
             this.db = db;
@@ -26,7 +28,7 @@ namespace FuzzyLogicInterface.Controllers
         }
 
         [HttpPost]
-
+       
         public IActionResult ModuleRecordInput(ModuleRecord mr)
         {
             if (ModelState.IsValid)
@@ -36,7 +38,7 @@ namespace FuzzyLogicInterface.Controllers
                 ModuleRecord obj = new ModuleRecord();
                 obj.ModuleCodeLines = mr.ModuleCodeLines;
                 obj.StartSession = DateTime.Now;
-                obj.EndSession = DateTime.Now;
+            
                 TempData["ModuleCodeLines"] = mr.ModuleCodeLines;
        
                 db.ModulesData.Add(obj);
@@ -51,26 +53,38 @@ namespace FuzzyLogicInterface.Controllers
             return View();
         }
         [HttpPost]
-       public IActionResult TestRecordInput(TestRecord tr)
+      
+        public async Task<ActionResult> TestRecordInput(TestRecord tr)
             {
-                if (ModelState.IsValid)
+            if (ModelState.IsValid)
+            {
+                TestRecord obj = new TestRecord();
+
+                tr.ModuleCodeLinesEntered = db.ModulesData.OrderByDescending(p => p.Id).FirstOrDefault().ModuleCodeLines;
+                TempData["ModuleCodeLInes"] = tr.ModuleCodeLinesEntered;
+                obj.ModuleCodeLinesEntered = tr.ModuleCodeLinesEntered;
+
+                obj.TestCodeLines =  tr.TestCodeLines;
+
+                tr.CriticalityOfRequirement = (tr.CriticalityOfRequirement)/10;
+                obj.CriticalityOfRequirement = tr.CriticalityOfRequirement;
+
+                
+                tr.CodeCoverage = (tr.TestCodeLines / tr.ModuleCodeLinesEntered);
+                tr.CodeCoverage = (float)Math.Round(tr.CodeCoverage, 2);
+                obj.CodeCoverage = tr.CodeCoverage;
+
+                tr.FaultCoverage = (tr.FaultCoverage)/10;
+                obj.FaultCoverage = tr.FaultCoverage;
+
+                if (tr.CodeCoverage >= 1)
                 {
-                    TestRecord obj = new TestRecord();
-
-                    tr.ModuleCodeLinesEntered = db.ModulesData.OrderByDescending(p => p.Id).FirstOrDefault().ModuleCodeLines;
-                    TempData["ModuleCodeLInes"] = tr.ModuleCodeLinesEntered;
-                    obj.ModuleCodeLinesEntered = tr.ModuleCodeLinesEntered;
-
-                    obj.CriticalityOfRequirement = tr.CriticalityOfRequirement;
-
-                    tr.CodeCoverage = (tr.CodeCoverage / tr.ModuleCodeLinesEntered);
-                    tr.CodeCoverage = (float)Math.Round(tr.CodeCoverage, 2);
-                    obj.CodeCoverage = tr.CodeCoverage;
-
-                    obj.FaultCoverage = tr.FaultCoverage;
-
-
-
+                    ViewData["Warning"] = "Test Case Code lines should be less than module code lines.";
+                    //ModelState.Clear();
+                    return View();
+                }
+                else
+                {
 
                     //CR Low
                     if (tr.CriticalityOfRequirement >= lowStart && tr.CriticalityOfRequirement <= lowEnd)
@@ -78,268 +92,249 @@ namespace FuzzyLogicInterface.Controllers
                         //CC Low
                         if (tr.CodeCoverage >= lowStart && tr.CodeCoverage <= lowEnd)
                         {
-                        //fc low
-                            if (tr.FaultCoverage >= lowStart && tr.CodeCoverage <= lowEnd)
+                            //fc low
+                            if (tr.FaultCoverage >= lowStart && tr.FaultCoverage <= lowEnd)
                             {
-                                obj.Priority = "L";
+                                obj.Priority = "Low";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
 
                             }
                             //fc medium
-                            else if (tr.FaultCoverage >= midStart && tr.CodeCoverage <= midEnd)
+                            else if (tr.FaultCoverage >= midStart && tr.FaultCoverage <= midEnd)
                             {
-                                obj.Priority = "M";
+                                obj.Priority = "Medium";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
                             }
                             //fc high
-                            else if (tr.FaultCoverage >= hiStart && tr.CodeCoverage <= hiEnd)
+                            else if (tr.FaultCoverage >= hiStart && tr.FaultCoverage <= hiEnd)
                             {
-                                obj.Priority = "H";
+                                obj.Priority = "High";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
                             }
                         }
                         //CC Medium
                         else if (tr.CodeCoverage >= midStart && tr.CodeCoverage <= midEnd)
                         {
-                        //fc low
-                            if (tr.FaultCoverage >= lowStart && tr.CodeCoverage <= lowEnd)
+                            //fc low
+                            if (tr.FaultCoverage >= lowStart && tr.FaultCoverage <= lowEnd)
                             {
-                                obj.Priority = "L";
+                                obj.Priority = "Low";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
 
                             }
                             //fc medium
-                            else if (tr.FaultCoverage >= midStart && tr.CodeCoverage <= midEnd)
+                            else if (tr.FaultCoverage >= midStart && tr.FaultCoverage <= midEnd)
                             {
-                                obj.Priority = "M";
+                                obj.Priority = "Medium";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
                             }
                             //fc high
-                            else if (tr.FaultCoverage >= hiStart && tr.CodeCoverage <= hiEnd)
+                            else if (tr.FaultCoverage >= hiStart && tr.FaultCoverage <= hiEnd)
                             {
-                                obj.Priority = "H";
+                                obj.Priority = "High";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
                             }
                         }
                         //CC high
                         else if (tr.CodeCoverage >= hiStart && tr.CodeCoverage <= hiEnd)
                         {
-                        //fc low
+                            //fc low
 
                             if (tr.FaultCoverage >= lowStart && tr.CodeCoverage <= lowEnd)
                             {
-                                obj.Priority = "M";
+                                obj.Priority = "Medium";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
 
                             }
                             //fc medium
-                            else if (tr.FaultCoverage >= midStart && tr.CodeCoverage <= midEnd)
+                            else if (tr.FaultCoverage >= midStart && tr.FaultCoverage <= midEnd)
                             {
-                                obj.Priority = "M";
+                                obj.Priority = "Medium";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
                             }
                             //fc high
-                            else if (tr.FaultCoverage >= hiStart && tr.CodeCoverage <= hiEnd)
+                            else if (tr.FaultCoverage >= hiStart && tr.FaultCoverage <= hiEnd)
                             {
-                                obj.Priority = "H";
+                                obj.Priority = "High";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
                             }
                         }
                     }
-                //CR medium
-                else if (tr.CriticalityOfRequirement >= midStart && tr.CriticalityOfRequirement <= midEnd)
+                    //CR medium
+                    else if (tr.CriticalityOfRequirement >= midStart && tr.CriticalityOfRequirement <= midEnd)
                     {
                         //CC low
                         if (tr.CodeCoverage >= lowStart && tr.CodeCoverage <= lowEnd)
                         {
-                        //fc low
-                            if (tr.FaultCoverage >= lowStart && tr.CodeCoverage <= lowEnd)
-                            {
-                                obj.Priority = "L";
-                                obj.PriorityValue = tr.CriticalityOfRequirement;
-
-                            }
-                            //fc medium
-                            else if (tr.FaultCoverage >= midStart && tr.CodeCoverage <= midEnd)
-                            {
-                                obj.Priority = "L";
-                                obj.PriorityValue = tr.CriticalityOfRequirement;
-                            }
-                            //fc high
-                            else if (tr.FaultCoverage >= hiStart && tr.CodeCoverage <= hiEnd)
-                            {
-                                obj.Priority = "L";
-                                obj.PriorityValue = tr.CriticalityOfRequirement;
-                            }
-                        }
-                    //CC medium
-                    else if (tr.CodeCoverage >= midStart && tr.CodeCoverage <= midEnd)
-                        {
-                        //fc low
-                            if (tr.FaultCoverage >= lowStart && tr.CodeCoverage <= lowEnd)
-                            {
-                                obj.Priority = "M";
-                                obj.PriorityValue = tr.CriticalityOfRequirement;
-
-                            }
-                            //fc medium
-                            else if (tr.FaultCoverage >= midStart && tr.CodeCoverage <= midEnd)
-                            {
-                                obj.Priority = "M";
-                                obj.PriorityValue = tr.CriticalityOfRequirement;
-                            }
                             //fc low
-                            else if (tr.FaultCoverage >= hiStart && tr.CodeCoverage <= hiEnd)
+                            if (tr.FaultCoverage >= lowStart && tr.FaultCoverage <= lowEnd)
                             {
-                                obj.Priority = "H";
-                                obj.PriorityValue = tr.CriticalityOfRequirement;
-                            }
-                        }
-                        //CC High
-                        else if (tr.CodeCoverage >= hiStart && tr.CodeCoverage <= hiEnd)
-                        {
-                        //fc low
-                            if (tr.FaultCoverage >= lowStart && tr.CodeCoverage <= lowEnd)
-                            {
-                                obj.Priority = "H";
+                                obj.Priority = "Low";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
 
                             }
                             //fc medium
-                            else if (tr.FaultCoverage >= midStart && tr.CodeCoverage <= midEnd)
+                            else if (tr.FaultCoverage >= midStart && tr.FaultCoverage <= midEnd)
                             {
-                                obj.Priority = "H";
+                                obj.Priority = "Low";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
                             }
                             //fc high
-                            else if (tr.FaultCoverage >= hiStart && tr.CodeCoverage <= hiEnd)
+                            else if (tr.FaultCoverage >= hiStart && tr.FaultCoverage <= hiEnd)
                             {
-                                obj.Priority = "H";
-                                obj.PriorityValue = tr.CriticalityOfRequirement;
-                            }
-                        }
-                    }
-                //CR High
-                else if (tr.CriticalityOfRequirement >= hiStart && tr.CriticalityOfRequirement <= hiEnd)
-                    { //CC low
-                        if (tr.CodeCoverage >= lowStart && tr.CodeCoverage <= lowEnd)
-                        {
-                            if (tr.FaultCoverage >= lowStart && tr.CodeCoverage <= lowEnd)
-                            {
-                                obj.Priority = "H";
-                                obj.PriorityValue = tr.CriticalityOfRequirement;
-
-                            }
-                            else if (tr.FaultCoverage >= midStart && tr.CodeCoverage <= midEnd)
-                            {
-                                obj.Priority = "H";
-                                obj.PriorityValue = tr.CriticalityOfRequirement;
-                            }
-                            else if (tr.FaultCoverage >= hiStart && tr.CodeCoverage <= hiEnd)
-                            {
-                                obj.Priority = "H";
+                                obj.Priority = "Low";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
                             }
                         }
                         //CC medium
                         else if (tr.CodeCoverage >= midStart && tr.CodeCoverage <= midEnd)
                         {
-                            if (tr.FaultCoverage >= lowStart && tr.CodeCoverage <= lowEnd)
+                            //fc low
+                            if (tr.FaultCoverage >= lowStart && tr.FaultCoverage <= lowEnd)
                             {
-                                obj.Priority = "H";
+                                obj.Priority = "Medium";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
 
                             }
-                            else if (tr.FaultCoverage >= midStart && tr.CodeCoverage <= midEnd)
+                            //fc medium
+                            else if (tr.FaultCoverage >= midStart && tr.FaultCoverage <= midEnd)
                             {
-                                obj.Priority = "H";
+                                obj.Priority = "Medium";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
                             }
-                            else if (tr.FaultCoverage >= hiStart && tr.CodeCoverage <= hiEnd)
+                            //fc low
+                            else if (tr.FaultCoverage >= hiStart && tr.FaultCoverage <= hiEnd)
                             {
-                                obj.Priority = "H";
+                                obj.Priority = "High";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
                             }
                         }
                         //CC High
                         else if (tr.CodeCoverage >= hiStart && tr.CodeCoverage <= hiEnd)
                         {
-                            if (tr.FaultCoverage >= lowStart && tr.CodeCoverage <= lowEnd)
+                            //fc low
+                            if (tr.FaultCoverage >= lowStart && tr.FaultCoverage <= lowEnd)
                             {
-                                obj.Priority = "H";
+                                obj.Priority = "High";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
 
                             }
-                            else if (tr.FaultCoverage >= midStart && tr.CodeCoverage <= midEnd)
+                            //fc medium
+                            else if (tr.FaultCoverage >= midStart && tr.FaultCoverage <= midEnd)
                             {
-                                obj.Priority = "H";
+                                obj.Priority = "High";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
                             }
-                            else if (tr.FaultCoverage >= hiStart && tr.CodeCoverage <= hiEnd)
+                            //fc high
+                            else if (tr.FaultCoverage >= hiStart && tr.FaultCoverage <= hiEnd)
                             {
-                                obj.Priority = "H";
+                                obj.Priority = "High";
                                 obj.PriorityValue = tr.CriticalityOfRequirement;
                             }
                         }
                     }
+                    //CR High
+                    else if (tr.CriticalityOfRequirement >= hiStart && tr.CriticalityOfRequirement <= hiEnd)
+                    { //CC low
+                        if (tr.CodeCoverage >= lowStart && tr.CodeCoverage <= lowEnd)
+                        {
+                            if (tr.FaultCoverage >= lowStart && tr.FaultCoverage <= lowEnd)
+                            {
+                                obj.Priority = "High";
+                                obj.PriorityValue = tr.CriticalityOfRequirement;
 
+                            }
+                            else if (tr.FaultCoverage >= midStart && tr.FaultCoverage <= midEnd)
+                            {
+                                obj.Priority = "High";
+                                obj.PriorityValue = tr.CriticalityOfRequirement;
+                            }
+                            else if (tr.FaultCoverage >= hiStart && tr.FaultCoverage <= hiEnd)
+                            {
+                                obj.Priority = "High";
+                                obj.PriorityValue = tr.CriticalityOfRequirement;
+                            }
+                        }
+                        //CC medium
+                        else if (tr.CodeCoverage >= midStart && tr.CodeCoverage <= midEnd)
+                        {
+                            // fc low
+                            if (tr.FaultCoverage >= lowStart && tr.FaultCoverage <= lowEnd)
+                            {
+                                obj.Priority = "High";
+                                obj.PriorityValue = tr.CriticalityOfRequirement;
+
+                            }
+                            //fc medium
+                            else if (tr.FaultCoverage >= midStart && tr.FaultCoverage <= midEnd)
+                            {
+                                obj.Priority = "High";
+                                obj.PriorityValue = tr.CriticalityOfRequirement;
+                            }
+                            //fc high
+                            else if (tr.FaultCoverage >= hiStart && tr.FaultCoverage <= hiEnd)
+                            {
+                                obj.Priority = "High";
+                                obj.PriorityValue = tr.CriticalityOfRequirement;
+                            }
+                        }
+                        //CC High
+                        else if (tr.CodeCoverage >= hiStart && tr.CodeCoverage <= hiEnd)
+                        {
+                            //fc low
+                            if (tr.FaultCoverage >= lowStart && tr.FaultCoverage <= lowEnd)
+                            {
+                                obj.Priority = "High";
+                                obj.PriorityValue = tr.CriticalityOfRequirement;
+
+                            }
+                            // fc medium
+                            else if (tr.FaultCoverage >= midStart && tr.FaultCoverage <= midEnd)
+                            {
+                                obj.Priority = "High";
+                                obj.PriorityValue = tr.CriticalityOfRequirement;
+                            }
+                            //fc high
+                            else if (tr.FaultCoverage >= hiStart && tr.FaultCoverage <= hiEnd)
+                            {
+                                obj.Priority = "High";
+                                obj.PriorityValue = tr.CriticalityOfRequirement;
+                            }
+                        }
+                    }
+                    obj.dbEntry = DateTime.Now;
 
                     db.TestsData.Add(obj);
-                    db.SaveChanges();
-                
-                    ViewData["Message"] = "Test Record Entered Successfully";
+                    await db.SaveChangesAsync();
+
+                    ViewData["Message"] = " Test Record Entered Successfully";
+                    ModelState.Clear();
+                    return View();
+                    //Response.Redirect(Request.Url.AbsoluteUri);
                 }
 
-
+            }
+            else
+            {
+                ModelState.Clear();
                 return View();
             }
-        //[HttpGet]
-        //public IActionResult indexee()
-        //{
-        //    return View();
-        //}
-        //public async Task<ActionResult> SortOutput()
-        //{
-        //    IQueryable<TestRecord> items = from i in db.TestsData orderby i.ModuleCodeLinesEntered select i;
-        //    List<TestRecord> TestRecordSorted = await items.ToListAsync();
-        //    return View(todolist);
-        //}
-
-
-        //var SortedRecords = from sr in db.TestsData
-        //             where sr.ModuleCodeLinesEntered==db.ModulesData.OrderByDescending(p => p.Id).FirstOrDefault().ModuleCodeLines
-        //             select sr;
-
-        //return View(SortedRecords.ToList());
-
-        //     var model =
-        //(
-        //    from p in this.List()
-        //    where (p.column1 == column1) && (p.column2 == column2)
-        //    select p
-        //).FirstOrDefault();
-        //     return View(model);
+           
+        }
+        
 
         [HttpGet]
         public IActionResult SortOutput()
         {
-           // ModuleRecord mr = new ModuleRecord();
-           // mr.EndSession= db.ModulesData.OrderByDescending(p => p.Id).FirstOrDefault().EndSession;
-
-            //var query = from m in db.TestsData
-            //            where m.ModuleCodeLinesEntered == db.TestsData.OrderByDescending(p => p.Id).FirstOrDefault().ModuleCodeLinesEntered
-            //            select m;
-            //foreach (var a in query)
-            //{
-            //    System.Console.WriteLine(a.Name + " " + a.Address1_City);
-            //}
-            // Or this for typed model
-            // select new MyModel { Column1 = m.Column1, etc }\
-
-            var listdata = db.TestsData.ToList();
+            
+            var modelLines = db.ModulesData.OrderByDescending(x => x.Id).FirstOrDefault().ModuleCodeLines;
+            var modelDate = db.ModulesData.OrderByDescending(x => x.StartSession).FirstOrDefault().StartSession;
+            var listdata = from sr in db.TestsData
+                           where sr.ModuleCodeLinesEntered ==modelLines where sr.dbEntry >= modelDate
+                           select sr;
 
             //var model = query.First();
-            return View(listdata);
+            return View(listdata.ToList());
         }
     }
 }

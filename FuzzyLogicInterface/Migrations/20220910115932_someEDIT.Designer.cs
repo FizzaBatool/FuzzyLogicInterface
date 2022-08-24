@@ -4,6 +4,7 @@ using FuzzyLogicInterface.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FuzzyLogicInterface.Migrations
 {
     [DbContext(typeof(FuzzyContext))]
-    partial class FuzzyContextModelSnapshot : ModelSnapshot
+    [Migration("20220910115932_someEDIT")]
+    partial class someEDIT
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

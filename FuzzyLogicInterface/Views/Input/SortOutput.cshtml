@@ -8,35 +8,17 @@
     <hr />
 
     <div>
-        @Html.ActionLink("Start Over", "ModuleRecordInput", "Input", htmlAttributes: new {@class="btn btn-primary btn-md", style="white-space: normal" })
+        @Html.ActionLink("Start Over", "ModuleRecordInput", "Input", htmlAttributes: new {@class="btn btn-info btn-md", style="white-space: normal" })
     </div>
      
 <table class="table">
 
     <thead>
         <tr>
-           @* <th>
-                 @Html.DisplayNameFor(model => model.ModuleCodeLinesEntered)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CriticalityOfRequirement)
-            </th>
-            <th>
-                 @Html.DisplayNameFor(model => model.CodeCoverage)
-            </th>
-            <th>
-                 @Html.DisplayNameFor(model => model.FaultCoverage)
-            </th>
-            <th>
-                 @Html.DisplayNameFor(model => model.PriorityValue)
-            </th>
-           <th>
-                @Html.DisplayNameFor(model => model.Priority)
-           </th>*@
-
+          
            <th>Module Code Lines</th>
-           <th>Criticality Of Requirement</th>
-            <th>Code Coverage</th>
+           <th>Test Case Code Lines</th>
+           <th>Criticality Of Requirement</th>  
            <th>Fault Coverage</th>
             <th>Priority Value</th>
            <th>Priority</th>
@@ -52,14 +34,13 @@
            
         <tr>
             <td>
-               @*@Html.DisplayFor(modelItem => item.Detail)*@
                @item.ModuleCodeLinesEntered
             </td>
             <td>
-                  @item.CriticalityOfRequirement
+                  @item.TestCodeLines
             </td>
             <td>
-                  @item.CodeCoverage
+                  @item.CriticalityOfRequirement
             </td>
             <td>
                   @item.FaultCoverage
@@ -76,28 +57,6 @@
 }
     </tbody>
 </table>
-   @* <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CriticalityOfRequirement)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CriticalityOfRequirement)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CodeCoverage)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CodeCoverage)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FaultCoverage)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FaultCoverage)
-        </dd>
-    </dl>*@
+ 
 </div>
-@*<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>*@
+
