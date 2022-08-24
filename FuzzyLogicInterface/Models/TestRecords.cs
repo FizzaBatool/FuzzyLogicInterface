@@ -12,7 +12,7 @@ namespace FuzzyLogicInterface.Models
         //public int ModuleRecordId { get; set; }
         //public ModuleRecord ModuleRecord { get; set; }
 
-       [Required(ErrorMessage = "Enter criticality of requirement")]
+        [Required(ErrorMessage = "Enter criticality of requirement")]
        [Range(typeof(float), "0.0", "1.0", ErrorMessage = "The field value must be between 0.0 and 1.0 ")]
         public float CriticalityOfRequirement { get; set; }
 
@@ -29,5 +29,8 @@ namespace FuzzyLogicInterface.Models
 
         [ScaffoldColumn(false)]
         public string Priority { get; set; }
+
+        [ScaffoldColumn(false)]
+        public DateTime dbEntry { get; set; }
     }
 }

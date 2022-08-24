@@ -13,6 +13,7 @@ namespace FuzzyLogicInterface.Controllers
         public float midEnd = 0.66f;
         public float hiStart = 0.67f;
         public float hiEnd = 1.0f;
+     
         public InputController(FuzzyContext db)
         {
             this.db = db;
@@ -36,7 +37,7 @@ namespace FuzzyLogicInterface.Controllers
                 ModuleRecord obj = new ModuleRecord();
                 obj.ModuleCodeLines = mr.ModuleCodeLines;
                 obj.StartSession = DateTime.Now;
-                obj.EndSession = DateTime.Now;
+                //obj.EndSession = DateTime.Now;
                 TempData["ModuleCodeLines"] = mr.ModuleCodeLines;
        
                 db.ModulesData.Add(obj);
@@ -283,12 +284,12 @@ namespace FuzzyLogicInterface.Controllers
                         }
                     }
 
-
+                tr.dbEntry = obj.dbEntry = DateTime.Now;
                     db.TestsData.Add(obj);
                     db.SaveChanges();
                 
                     ViewData["Message"] = "Test Record Entered Successfully";
-                }
+                 }
 
 
                 return View();
@@ -323,23 +324,25 @@ namespace FuzzyLogicInterface.Controllers
         [HttpGet]
         public IActionResult SortOutput()
         {
-           // ModuleRecord mr = new ModuleRecord();
-           // mr.EndSession= db.ModulesData.OrderByDescending(p => p.Id).FirstOrDefault().EndSession;
+            //ModuleRecord mr = new ModuleRecord();
+            //mr.EndSession  = DateTime.Now;
 
-            //var query = from m in db.TestsData
-            //            where m.ModuleCodeLinesEntered == db.TestsData.OrderByDescending(p => p.Id).FirstOrDefault().ModuleCodeLinesEntered
-            //            select m;
-            //foreach (var a in query)
-            //{
-            //    System.Console.WriteLine(a.Name + " " + a.Address1_City);
-            //}
-            // Or this for typed model
-            // select new MyModel { Column1 = m.Column1, etc }\
 
-            var listdata = db.TestsData.ToList();
+            // var modelTime=db.ModulesData.OrderByDescending(y => y.EndSession).FirstOrDefault();   
+
+            //var listdata = db.TestsData.TakeWhile(m => m.ModuleCodeLinesEntered ==model).ToList();
+            //var listdata = db.TestsData.Where(m => m.ModuleCodeLinesEntered ==model).TakeWhile(m => m.ModuleCodeLinesEntered ==model).ToList();
+
+            //var model = db.ModulesData.OrderByDescending(x => x.StartSession).Select(x => x.StartSession).ToList();
+
+            var modelLines = db.ModulesData.OrderByDescending(x => x.Id).FirstOrDefault().ModuleCodeLines;
+            var modelDate = db.ModulesData.OrderByDescending(x => x.StartSession).FirstOrDefault().StartSession;
+            var listdata = from sr in db.TestsData
+                           where sr.ModuleCodeLinesEntered ==modelLines where sr.dbEntry >= modelDate
+                           select sr;
 
             //var model = query.First();
-            return View(listdata);
+            return View(listdata.ToList());
         }
     }
 }
