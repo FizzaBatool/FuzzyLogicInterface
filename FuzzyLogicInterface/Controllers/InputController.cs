@@ -13,7 +13,6 @@ namespace FuzzyLogicInterface.Controllers
         public float midEnd = 0.66f;
         public float hiStart = 0.67f;
         public float hiEnd = 1.0f;
-        public int count = 0;
      
         public InputController(FuzzyContext db)
         {
@@ -38,7 +37,7 @@ namespace FuzzyLogicInterface.Controllers
                 ModuleRecord obj = new ModuleRecord();
                 obj.ModuleCodeLines = mr.ModuleCodeLines;
                 obj.StartSession = DateTime.Now;
-            
+                obj.EndSession = DateTime.Now;
                 TempData["ModuleCodeLines"] = mr.ModuleCodeLines;
        
                 db.ModulesData.Add(obj);
@@ -302,15 +301,12 @@ namespace FuzzyLogicInterface.Controllers
                             }
                         }
                     }
-                    obj.dbEntry = DateTime.Now;
+
 
                     db.TestsData.Add(obj);
-                    await db.SaveChangesAsync();
-
-                    ViewData["Message"] = " Test Record Entered Successfully";
-                    ModelState.Clear();
-                    return View();
-                    //Response.Redirect(Request.Url.AbsoluteUri);
+                    db.SaveChanges();
+                
+                    ViewData["Message"] = "Test Record Entered Successfully";
                 }
 
             }
@@ -326,12 +322,20 @@ namespace FuzzyLogicInterface.Controllers
         [HttpGet]
         public IActionResult SortOutput()
         {
-            
-            var modelLines = db.ModulesData.OrderByDescending(x => x.Id).FirstOrDefault().ModuleCodeLines;
-            var modelDate = db.ModulesData.OrderByDescending(x => x.StartSession).FirstOrDefault().StartSession;
-            var listdata = from sr in db.TestsData
-                           where sr.ModuleCodeLinesEntered ==modelLines where sr.dbEntry >= modelDate
-                           select sr;
+           // ModuleRecord mr = new ModuleRecord();
+           // mr.EndSession= db.ModulesData.OrderByDescending(p => p.Id).FirstOrDefault().EndSession;
+
+            //var query = from m in db.TestsData
+            //            where m.ModuleCodeLinesEntered == db.TestsData.OrderByDescending(p => p.Id).FirstOrDefault().ModuleCodeLinesEntered
+            //            select m;
+            //foreach (var a in query)
+            //{
+            //    System.Console.WriteLine(a.Name + " " + a.Address1_City);
+            //}
+            // Or this for typed model
+            // select new MyModel { Column1 = m.Column1, etc }\
+
+            var listdata = db.TestsData.ToList();
 
             //var model = query.First();
             return View(listdata.ToList());
