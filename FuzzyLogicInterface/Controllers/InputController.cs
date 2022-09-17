@@ -37,7 +37,7 @@ namespace FuzzyLogicInterface.Controllers
                 ModuleRecord obj = new ModuleRecord();
                 obj.ModuleCodeLines = mr.ModuleCodeLines;
                 obj.StartSession = DateTime.Now;
-                obj.EndSession = DateTime.Now;
+            
                 TempData["ModuleCodeLines"] = mr.ModuleCodeLines;
        
                 db.ModulesData.Add(obj);
@@ -51,10 +51,13 @@ namespace FuzzyLogicInterface.Controllers
         {
             return View();
         }
+
+
+        //public async Task<ActionResult> TestRecordInput(TestRecord tr)
         [HttpPost]
-      
-        public async Task<ActionResult> TestRecordInput(TestRecord tr)
-            {
+        public IActionResult TestRecordInput(TestRecord tr)
+
+        {
             if (ModelState.IsValid)
             {
                 TestRecord obj = new TestRecord();
@@ -305,7 +308,7 @@ namespace FuzzyLogicInterface.Controllers
 
                     db.TestsData.Add(obj);
                     db.SaveChanges();
-                
+                    ModelState.Clear();
                     ViewData["Message"] = "Test Record Entered Successfully";
                 }
 
@@ -313,8 +316,9 @@ namespace FuzzyLogicInterface.Controllers
             else
             {
                 ModelState.Clear();
-                return View();
+                //return View();
             }
+            return View();
            
         }
         
